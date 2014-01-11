@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cross-Origin Resource Sharing (CORS) With jQuery And Node.js</title>
+    <SCRIPT SRC=../trunk/js/lib/jquery-2.0.3.min.js></SCRIPT>
+</head>
+<body>
+
+<h1>
+    Cross-Origin Resource Sharing (CORS) With jQuery And Node.js
+</h1>
+
+
+<h2>
+    PUT Response
+</h2>
+ 
+<pre id="putResponse">
+<!-- To be populated dynamically. -->
+</pre>
+
+
+<h2>
+    DELETE Response
+</h2>
+ 
+<pre id="CorsRequest">
+<!-- To be populated dynamically. -->
+</pre>
+
+
+<script type="text/javascript">
+    //  makeDELETERequest();
+
+    //    // Wrap up the PUT request execution.
+    //    var makePUTRequest = function(){
+    //
+    //// Make the PUT request.
+    //        $.ajax({
+    //            type: "PUT",
+    //            url: "http://localhost:8080/some/url/resource/path",
+    //            contentType: "application/json",
+    //            data: JSON.stringify({
+    //                name: "Tricia",
+    //                age: 37
+    //            }),
+    //            dataType: "text",
+    //            success: function( response ){
+    //
+    //// Put the plain text in the PRE tag.
+    //                $( "#putResponse" ).text( response );
+    //
+    //            },
+    //            error: function( error ){
+    //
+    //// Log any error.
+    //                console.log( "ERROR:", error );
+    //
+    //            },
+    //            complete: function(){
+    //
+    //// When this completes, execute teh
+    //// DELETE request.
+    //                makeDELETERequest();
+    //
+    //            }
+    //        });
+    //
+    //    };
+
+
+    //
+    //  var client = new XMLHttpRequest();
+    //
+    //  client.onreadystatechange = function () {
+    //      if (this.readyState == 4 && this.status == 200) {
+    //          alert('The most awesome-est person to follow: ' + this.responseText);
+    //      }
+    //  };
+    //  client.open('GET', 'http://remysharp.com/demo/cors.php');
+    //  client.send()
+  // var dbcommand = 'select from #9:0'
+    //dbcommand= 'update #9:0 set firstName="mom"'
+   //  makeCorsDocument()
+    // makeCors();
+   // makeCorsCommand();
+   // makeCorsBatch()
+    makeCorsAdd()
+    //makeCorsUpdate()
+    //makeCorsSelect()
+    //    function utf8_to_b64(str) {
+    //        return window.btoa(unescape(encodeURIComponent(str)));
+    //    }
+    //    function make_base_auth(user, password) {
+    //        var tok = user + ':' + password;
+    //        var hash = utf8_to_b64(tok);
+    //        debugger;
+    //        return "Basic " + hash;
+    //    }
+
+
+    // Wrap up the DELETE request execution so it can easily be
+    // invoked from the end of the PUT delete response.
+    function makeCors() {
+        $.ajaxSetup({
+            xhrFields: {
+                withCredentials: true
+            },
+            crossDomain: true
+        });
+
+//        var mydata = { "transaction": true,
+//            "operations": [
+//                { "type": "u",
+//                    "record": {
+//                        "@rid": "#9:0",
+//                        "@version": 3,
+//                        "firstName": "Luca"
+//                    }
+//                }
+//            ]
+//        }
+
+
+        $.ajax({
+            type: 'PUT',
+            url: 'http://localhost:2480/document/RestTester/9:0',
+            dataType: 'json',
+            data: JSON.stringify(mydata),
+            //processData: false,
+            //contentType: "application/json; charset=UTF-8",
+            headers: {
+                "Authorization": "Basic YWRtaW46YWRtaW4="
+            },
+
+            success: function (response) {
+                // var parsed_json = JSON.stringify(response)
+                $("#CorsRequest").text(response);
+
+            },
+            error: function (error) {
+
+// Log any error.
+                console.log("ERROR:", error);
+
+            }
+
+        })
+    }
+
+    //    function makeCorsCommand(){
+    //        $.ajaxSetup({
+    //            xhrFields: {
+    //                withCredentials: true
+    //            },
+    //
+    //            $.ajax({
+    //                    type: 'POST',
+    //                    url: 'http://localhost:2480/command/RestTester/sql/update #9:0 set firstName="dan"',
+    //                    headers: {
+    //                        "Authorization": "Basic YWRtaW46YWRtaW4="
+    //                    },
+    //
+    //                    success: function (response) {
+    //                        $("#CorsRequest").text(response);
+    //
+    //                    },
+    //                    error: function (error) {
+    //
+    //// Log any error.
+    //                        console.log("ERROR:", error);
+    //
+    //                    }
+    //
+    //                })
+    //    }           crossDomain: true
+    //        });
+    //
+
+
+    function makeCorsCommand() {
+        $.ajaxSetup({
+            xhrFields: {
+                withCredentials: true
+            },
+            crossDomain: true
+        });
+
+        $.ajax({
+            type: 'POST',
+            url: 'http://localhost:2480/command/RestTester/sql/' + encodeURIComponent(dbcommand).replace(/'/g, "%27").replace(/"/g, "%22"),
+            headers: {
+                "Authorization": "Basic YWRtaW46YWRtaW4="
+            },
+
+            success: function (response) {
+                var parsed_json = JSON.stringify(response)
+                $("#CorsRequest").text(parsed_json);
+
+            },
+            error: function (error) {
+
+// Log any error.
+                console.log("ERROR:", error);
+
+            }
+
+        })
+    }
+
+    function makeCorsDocument() {
+        $.ajaxSetup({
+            xhrFields: {
+                withCredentials: true
+            },
+            crossDomain: true
+        });
+
+        $.ajax({
+            type: 'GET',
+            url: 'http://localhost:2480/document/RestTester/' + encodeURIComponent('9:0').replace(/'/g, "%27").replace(/"/g, "%22"),
+            headers: {
+                "Authorization": "Basic YWRtaW46YWRtaW4="
+            },
+
+            success: function (response) {
+                var parsed_json = JSON.stringify(response)
+                $("#CorsRequest").text(parsed_json);
+
+            },
+            error: function (error) {
+
+// Log any error.
+                console.log("ERROR:", error);
+
+            }
+
+        })
+    }
+
+    function makeCorsBatch() {
+        var mydata =
+        {
+            "transaction": true,
+            "operations": [
+                {
+                    "type": "u",
+                    "record": {
+                        "@version":24,
+                        "@rid" : "#9:4",
+                        "firstName": "kotoe",
+                        "lastName": "test"
+                    }
+                }
+            ]
+        }
+        $.ajaxSetup({
+            xhrFields: {
+                withCredentials: true
+            },
+            crossDomain: true
+        });
+            $.ajax({
+            type: 'POST',
+            contentType: 'application/json',
+            processData: false,
+            dataType: 'json',
+            data: JSON.stringify(mydata),
+            url: 'http://localhost:2480/batch/RestTester',
+            headers: {
+                "Authorization": "Basic YWRtaW46YWRtaW4="
+            },
+
+            success: function (response) {
+                var parsed_json = JSON.stringify(response)
+                $("#CorsRequest").text(parsed_json);
+
+            },
+            error: function (error) {
+
+// Log any error.
+                console.log("ERROR:", error);
+
+            }
+
+        })
+    }
+
+
+    function makeCorsUpdate() {
+        var str = '9:4'
+        var mydata =
+          {
+              "@version":23,
+              "firstName": "ee",
+              "lastName": "ff"
+
+          }
+        $.ajaxSetup({
+            xhrFields: {
+                withCredentials: true
+            },
+            crossDomain: true
+        });
+        $.ajax({
+            type: 'PUT',
+            contentType: 'application/json',
+            processData: false,
+            dataType: 'json',
+            data: JSON.stringify(mydata),
+            url: 'http://localhost:2480/document/RestTester/' + encodeURIComponent('9:4').replace(/'/g, "%27").replace(/"/g, "%22"),
+            headers: {
+                "Authorization": "Basic YWRtaW46YWRtaW4="
+            },
+
+            success: function (response) {
+                var parsed_json = JSON.stringify(response)
+                $("#CorsRequest").text(parsed_json);
+
+            },
+            error: function (error) {
+
+// Log any error.
+                console.log("ERROR:", error);
+
+            }
+
+        })
+    }
+
+
+
+
+    function makeCorsAdd() {
+        var str = '9:4'
+        var mydata =
+        {
+            "@class":"Contact",
+            "firstName": "aa",
+            "datetime": "2013-10-03T22:47:00"
+        }
+        $.ajaxSetup({
+            xhrFields: {
+                withCredentials: true
+            },
+            crossDomain: true
+        });
+        $.ajax({
+            type: 'POST',
+            contentType: 'application/json',
+            processData: false,
+            dataType: 'json',
+            data: JSON.stringify(mydata),
+            url: 'http://localhost:2480/document/RestTester/',
+            headers: {
+                "Authorization": "Basic YWRtaW46YWRtaW4="
+            },
+
+            success: function (response) {
+                var parsed_json = JSON.stringify(response)
+                $("#CorsRequest").text(parsed_json);
+
+            },
+            error: function (error) {
+
+// Log any error.
+                console.log("ERROR:", error);
+
+            }
+
+        })
+    }
+
+</script>
+</body>
+</html>

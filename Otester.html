@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cross-Origin Resource Sharing (CORS) With jQuery And Node.js</title>
+    <SCRIPT SRC=../trunk/js/lib/jquery-2.0.3.min.js></SCRIPT>
+</head>
+<body>
+
+<h1>
+    Cross-Origin Resource Sharing (CORS) With jQuery And Node.js
+</h1>
+
+
+<h2>
+    PUT Response
+</h2>
+ 
+<pre id="putResponse">
+<!-- To be populated dynamically. -->
+</pre>
+
+
+<h2>
+    DELETE Response
+</h2>
+ 
+<pre id="CorsRequest">
+<!-- To be populated dynamically. -->
+</pre>
+
+
+<script type="text/javascript">
+
+    makeCors();
+
+
+
+
+
+function makeCors (){
+    var str = '9:4'
+    var mydata =
+    {
+        "@class":"Contact",
+        "firstName": "aa",
+        "datetime": "2013-10-03T22:47:00"
+    }
+    $.ajaxSetup({
+        xhrFields: {
+            withCredentials: true
+        },
+        crossDomain: true
+    });
+    $.ajax({
+        type: 'GET',
+        contentType: 'application/json',
+        processData: false,
+        dataType: 'json',
+        url: 'http://localhost:2480/class/test/Contact',
+        headers: {
+            "Authorization": "Basic YWRtaW46YWRtaW4="
+        },
+
+        success: function (response) {
+            var parsed_json = JSON.stringify(response)
+            $("#CorsRequest").text(parsed_json);
+
+        },
+        error: function (error) {
+
+// Log any error.
+            console.log("ERROR:", error);
+
+        }
+
+    })
+}
+
+</script>
+</body>
+</html>

@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <SCRIPT>var isomorphicDir = "js/lib/isomorphic/";</SCRIPT>
+    <SCRIPT SRC=js/lib/isomorphic/system/modules-debug/ISC_Core.js></SCRIPT>
+    <SCRIPT SRC=js/lib/isomorphic/system/modules-debug/ISC_Foundation.js></SCRIPT>
+    <SCRIPT SRC=js/lib/isomorphic/system/modules-debug/ISC_Containers.js></SCRIPT>
+    <SCRIPT SRC=js/lib/isomorphic/system/modules-debug/ISC_Grids.js></SCRIPT>
+    <SCRIPT SRC=js/lib/isomorphic/system/modules-debug/ISC_Forms.js></SCRIPT>
+    <SCRIPT SRC=js/lib/isomorphic/system/modules-debug/ISC_DataBinding.js></SCRIPT>
+    <SCRIPT SRC=js/lib/isomorphic/skins/EnterpriseBlue/load_skin.js></SCRIPT>
+    <SCRIPT SRC=js/lib/scCustomClasses/RestfulDatasource.js></SCRIPT>
+    <SCRIPT SRC=js/lib/scCustomClasses/uritemplate.js></SCRIPT>
+</head>
+<body>
+<script>
+//    isc.ListGrid.create({ ID: "contactsList", left: 50, top: 50, width: 300, fields: [
+//        {name: "salutation", title: "Title"},
+//        {name: "firstname", title: "First Name"},
+//        {name: "lastname", title: "Last Name"}
+//    ], data: [
+//        {salutation: "Ms", firstname: "Kathy", lastname: "Whitting"},
+//        {salutation: "Mr", firstname: "Chris", lastname: "Glover"},
+//        {salutation: "Mrs", firstname: "Gwen", lastname: "Glover"}
+//    ] })
+
+//    isc.DynamicForm.create({ ID: "contactsForm", left: 50, top: 250, width: 300, fields: [
+//        {name: "salutation", title: "Title"},
+//        {name: "firstname", title: "First Name"},
+//        {name: "lastname", title: "Last Name"}
+//    ] })
+
+
+//    isc.DynamicForm.create({ ID: "contactsForm", left: 50, top: 250, width: 300, fields: [
+//        {name: "salutation", title: "Title", editorType: "select", valueMap: ["Ms", "Mr", "Mrs"] },
+//        {name: "firstname", title: "First Name"},
+//        {name: "lastname", title: "Last Name"},
+//        {name: "birthday", title: "Birthday", editorType: "date"},
+//        {name: "employment", title: "Status", editorType: "radioGroup", valueMap: ["Employed", "Unemployed"] },
+//        {name: "bio", title: "Biography", editorType: "textArea"},
+//        {name: "followup", title: "Follow up", editorType: "checkbox"}
+//    ] })
+
+
+//    isc.DataSource.create({
+//        ID: "contactsDS",
+//        dataFormat: "json",
+//        dataURL: "/simplyfundraising/data/contacts.js",
+//        fields: [
+//            {name: "salutation", title: "Title", editorType: "select", valueMap: ["Ms", "Mr", "Mrs"] },
+//            {name: "firstname", title: "First Name"},
+//            {name: "lastname", title: "Last Name"},
+//            {name: "birthday", title: "Birthday", editorType: "date"},
+//             {name: "employment", title: "Status", editorType: "radioGroup", valueMap: ["Employed", "Unemployed"] },
+//            {name: "bio", title: "Biography", editorType: "textArea"},
+//            {name: "followup", title: "Follow up", editorType: "checkbox"}
+//        ]
+//
+//    });
+//
+//
+//    isc.ListGrid.create({ ID: "contactsList", left: 50, top: 50, width: 500, dataSource: "contactsDS", recordClick: "contactsForm.editSelectedData(contactsList)", autoFetchData: true });
+//    isc.DynamicForm.create({ ID: "contactsForm", left: 50, top: 200, width: 300, dataSource: "contactsDS" });
+
+//contactsDS.addData({salutation: "Mr", firstname: "Steven", lastname: "Hudson"}, "say(data[0].firstname + 'added to contact list')", {prompt: "Adding new contact..."});
+// contactsList.fetchData( {lastname:"Glover"} );
+
+//    isc.DataSource.create({
+//        ID:"countries",
+//        dataFormat:"json",
+//        dataURL:"/simplyfundraising/data/countries_small.js",
+//        fields:[
+//            {title:"Name", name:"name"},
+//            {title:"Population", name:"population"},
+//            {title:"Total Area", name:"total_area"},
+//            {title:"Government", name:"government"}
+//        ]
+//    });
+//
+//
+//    isc.ListGrid.create({
+//        width: "100%",
+//        height: 150,
+//        dataSource: "countries",
+//        autoFetchData: true
+//    });
+    RPCManager.allowCrossDomainCalls = true
+//    var dbcommand = 'select from Contact'
+//    var dbcommandUpdate = 'update #9:0 set firstName="ttt"'
+//    isc.DataSource.create({
+//        ID: "contactsDS",
+//        dataFormat: "json",
+//        recordXPath: "/result",
+//        sparseUpdates: true,
+//        fields: [
+//            {name: "@version", title: "version", primaryKey: "true",type:"sequence", hidden: true},
+//            {name: "@rid", title: "rid", primaryKey: "true", hidden: true},
+//            {name: "firstName", title: "First Name"},
+//            {name: "lastName", title: "Last Name"}
+//        ],
+//        transformRequest: function (dsRequest) {
+//            debugger;
+//            var mydata = dsRequest.data
+//            if (dsRequest.operationType == "update") {
+//                //format data
+//            }
+//            else if (dsRequest.operationType == "add") {
+//                //format data
+//            }
+//            dsRequest.contentType = "application/json";
+//            return JSON.stringify(mydata)
+//        },
+//        operationBindings: [
+//            {operationType: "fetch",
+//                dataURL: 'http://localhost:2480/command/RestTester/sql/' + encodeURIComponent(dbcommand).replace(/'/g, "%27").replace(/"/g, "%22"),
+//                requestProperties: {httpHeaders: {"Authorization": "Basic YWRtaW46YWRtaW4="}}
+//            },
+//            {operationType: "add",
+//                dataURL: 'http://localhost:2480/command/RestTester/sql/' + encodeURIComponent(dbcommand).replace(/'/g, "%27").replace(/"/g, "%22")
+//            },
+//            {operationType: "update",
+//                dataURL: 'http://localhost:2480/document/RestTester/' + encodeURIComponent('{rid}').replace(/'/g, "%27").replace(/"/g, "%22"),
+//                dataProtocol: "postMessage"
+//            },
+//            {operationType: "remove",
+//                dataURL: 'http://localhost:2480/command/RestTester/sql/' + encodeURIComponent(dbcommand).replace(/'/g, "%27").replace(/"/g, "%22")
+//            }
+//        ]
+//    })
+
+// recordClick: "contactsForm.editSelectedData(contactsList)",
+//    isc.ListGrid.create({ ID: "contactsList",
+//        width:500, height:224, alternateRecordStyles:true, cellHeight:22,
+////        recordClick: function (viewer, record, rowNum, field, fieldNum, value, rawValue) {
+////            contactsForm.clearErrors();
+////            contactsForm.editSelectedData(contactsList);
+////            saveButton.enable();
+////        },
+//        dataSource: "contactsDS",
+//       // showFilterEditor: true,
+//        autoFetchData: true,
+//        canEdit: true,
+//        editEvent: "click",
+//        listEndEditAction: "next",
+//        autoSaveEdits: false
+//       // autoSaveEdits: false
+//       // dataPageSize:20
+//    });
+//  isc.DynamicForm.create({ ID: "contactsForm", left: 50, top: 200, width: 300, dataSource: "contactsDS" });
+
+//    isc.IButton.create({
+//        top:250,
+//        title:"Edit New",
+//        click:"contactsList.startEditingNew()"
+//    });
+
+//    isc.IButton.create({
+//        ID: "saveButton",
+//        top:250, left: 110,
+//        width: 100,
+//        title: "Save Order",
+//        click: function() {
+//            isc.RPCManager.startQueue();
+//          //  userDetailViewer.fetchData(findOrdersForm);
+//           // ordersListGrid.fetchData(findOrdersForm);
+//            contactsList.saveAllEdits()
+//            isc.RPCManager.sendQueue();
+//                 }
+//    });
+
+//
+//    isc.IButton.create({
+//        top:250, left: 110,
+//        title:"Save",
+//        click:"contactsList.saveAllEdits()"
+//    });
+//
+//    isc.IButton.create({
+//        top:250, left: 220,
+//        title:"Discard",
+//        click:"contactsList.discardAllEdits()"
+//    });
+//
+
+
+//    isc.IButton.create({
+//        ID: "saveButton",
+//        disabled: true,
+//        left: 175, top: 280, width: 150,
+//        form: contactsForm,
+//        title: "Save",
+//        click: function () {
+//
+//            contactsForm.saveData(function (dsResponse, data, dsRequest) {
+//                debugger;
+//            })
+//        }
+//    })
+//    function test() {
+//        debugger;
+//        var a = contactsForm.getChangedValues()
+//        var b = contactsForm.getOldValues()
+//        var c = contactsForm.valuesHaveChanged()
+//        //  var d = contactsForm.value
+//    }
+//
+//    var mydata =
+//    {
+//        "transaction": true,
+//        "operations": [
+//            {
+//                "type": "u",
+//                "record": {
+//                    "@version":24,
+//                    "@rid" : "#9:4",
+//                    "firstName": "mom",
+//                    "lastName": "test"
+//                }
+//            }
+//        ]
+//    }
+//
+//////Only works with pro, maybe could copy pro code
+//    var data = { here: "is some data", to: ["send to the server"]};
+//    var wasQueuing = isc.RPCManager.startQueue();
+//    alert(wasQueuing)
+//    isc.RPCManager.sendRequest({
+//      //  httpMethod: "POST",
+//        actionURL: "/servlet/MeetingAgendaServlet11",
+//        //contentType: 'application/json',
+//        data: mydata
+//        // useSimpleHttp: true
+//    });
+//    isc.RPCManager.sendRequest({
+//      //  httpMethod: "POST",
+//        actionURL: "/servlet/MeetingAgendaServlet11",
+//        //contentType: 'application/json',
+//        data: data
+//        //useSimpleHttp: true
+//
+//    });
+//    if (!wasQueuing) isc.RPCManager.sendQueue()
+//  RPCManager.useSimpleHttp=true;
+// var wasQueuing = RPCManager.startQueue()
+// RPCManager.send("a string of data", "myCallback(data)", {actionURL: "http://localhost:2480/"})
+// RPCManager.sendRequest({ data: ["some", "more data", 2], callback: "myCallback(data)", actionURL: "http://localhost:2480/"});
+//  RPCManager.sendRequest({ data: "different callback", callback: "myCallback2(data)", actionURL: "/rpcHandler.jsp"});
+// if (!wasQueuing) RPCManager.sendQueue()
+//    function myCallback(data) { alert("response from the server: " + data); }
+//    function myCallback2(data) { alert("response from the server (other callback): " + data); }
+
+
+isc.RestDataSource.create({
+    ID: "countryDS",
+    dataFormat:"json",
+    sparseUpdates: true,
+    fields: [
+        {name: "countryCode", title: "Code", primaryKey: true, canEdit: false},
+        {name: "countryName", title: "Country"},
+        {name: "capital", title: "Capital"}
+    ],
+
+    fetchDataURL: "country_fetch_rest.js",
+    addDataURL: "http://localhost:2480/command/RestTester/sql/",
+    updateDataURL: "http://localhost:2480/command/RestTester/sql/",
+    removeDataURL: "http://localhost:2480/command/RestTester/sql/",
+
+        operationBindings:[
+            {operationType:"fetch", dataProtocol:"getParams"},
+            {operationType:"add", dataProtocol:"postParams"},
+            {operationType:"remove", dataProtocol:"getParams", requestProperties:{httpMethod:"DELETE"}},
+            {operationType:"update", dataProtocol:"postMessage", requestProperties:{httpMethod:"PUT"}}
+        ]
+});
+
+isc.ListGrid.create({
+    ID: "countryList",
+    width: 500, height: 224, alternateRecordStyles: true,
+    emptyCellValue: "--",
+    dataSource: countryDS,
+    // display a subset of fields from the datasource
+    fields: [
+        {name: "countryCode"},
+        {name: "countryName"},
+        {name: "capital"},
+        {name: "continent"}
+    ],
+    sortFieldNum: 0, // sort by countryCode
+    dataPageSize: 50,
+    autoFetchData: true,
+    canEdit: true,
+    editEvent: "click",
+    listEndEditAction: "next",
+    autoSaveEdits: false
+})
+
+isc.IButton.create({
+    top: 250, left: 110,
+    title: "Save",
+    click: "countryList.saveAllEdits()"
+});
+
+
+</script>
+</body>
+</html>

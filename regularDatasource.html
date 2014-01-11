@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <SCRIPT>var isomorphicDir = "js/lib/isomorphic/";</SCRIPT>
+    <SCRIPT SRC=../trunk/js/lib/isomorphic/system/modules-debug/ISC_Core.js></SCRIPT>
+    <SCRIPT SRC=../trunk/js/lib/isomorphic/system/modules-debug/ISC_Foundation.js></SCRIPT>
+    <SCRIPT SRC=../trunk/js/lib/isomorphic/system/modules-debug/ISC_Containers.js></SCRIPT>
+    <SCRIPT SRC=../trunk/js/lib/isomorphic/system/modules-debug/ISC_Grids.js></SCRIPT>
+    <SCRIPT SRC=../trunk/js/lib/isomorphic/system/modules-debug/ISC_Forms.js></SCRIPT>
+    <SCRIPT SRC=../trunk/js/lib/isomorphic/system/modules-debug/ISC_DataBinding.js></SCRIPT>
+    <SCRIPT SRC=../trunk/js/lib/isomorphic/skins/EnterpriseBlue/load_skin.js></SCRIPT>
+
+
+
+</head>
+<body>
+<script>
+
+    RPCManager.allowCrossDomainCalls = true
+
+
+    isc.DataSource.create({
+        //DS ID must be same name as OrientDb Class
+        ID: "Contact",
+        recordXPath: "/results",
+        dataFormat: "json",
+        jsonSuffix: "",
+        jsonPrefix: "",
+        sparseUpdates: true,
+        prettyPrint: true,
+        dropExtraFields: true,
+        dataURL: "http://localhost:2480/scRequest/test",
+        operationBindings: [
+            {operationType: "fetch", dataProtocol: "postMessage", requestProperties: {httpMethod: "POST", httpHeaders: {"Authorization": "Basic YWRtaW46YWRtaW4="}}},
+            {operationType: "add", dataProtocol: "postMessage", requestProperties: {httpMethod: "POST", httpHeaders: {"Authorization": "Basic YWRtaW46YWRtaW4="}}},
+            {operationType: "remove", dataProtocol: "postMessage", requestProperties: {httpMethod: "POST", httpHeaders: {"Authorization": "Basic YWRtaW46YWRtaW4="}}},
+            {operationType: "update", dataProtocol: "postMessage", requestProperties: {httpMethod: "POST", httpHeaders: {"Authorization": "Basic YWRtaW46YWRtaW4="}}}
+        ],
+        transformRequest : function (dsRequest) {
+            //debugger;
+           // dsRequest.data = "{test:test}"
+           // var test = this.Super("transformRequest", arguments);
+            if (dsRequest.operationType == "fetch") {
+                var params = {
+                    startRow : dsRequest.startRow,
+                    endRow : dsRequest.endRow,
+                    sortBy : dsRequest.sortBy,
+                    dataSource: dsRequest.dataSource,
+                    operationType: dsRequest.operationType
+                };
+                var data = dsRequest.data;
+              //  data.dataSource= dsRequest.dataSource
+                params.data = data
+
+               // data.push(params)
+               // isc.JSONEncoder.addProperties({ prettyPrint:false })
+                dsRequest.data = JSON.stringify(params)
+              //  dsRequest.data =data;
+              //  debugger;
+              //  dsRequest.data.start = dsRequest.startRow;
+              //  dsRequest.data.end = dsRequest.endRow;
+              //  var dsRequest = isc.addProperties({}, dsRequest.data, params);
+return dsRequest
+              //  return   this.Super("transformRequest", arguments);
+            }
+           // return  this.Super("transformRequest", arguments);
+        },
+        fields: [
+            {name: "@rid", type: "text", title: "rid", primaryKey: true, canEdit: false},
+            {name: "@version", type: "integer", title: "version", canEdit: false},
+            {name: "lastName", type: "text", title: "lastName"},
+            {name: "firstName", type: "text", title: "firstName"}
+        ]
+    });
+
+    isc.ListGrid.create({
+        ID: "contactList",
+        dataSource: "Contact",
+        width: "100%",
+        autoFetchData: true
+    });
+
+
+    isc.IButton.create({
+        left:0, top:240, width:160,
+        title:"Fetch Code: US",
+        click:"contactList.fetchData({countryCode:'US'})"
+    })
+
+
+    isc.IButton.create({
+        left:170, top:240, width:160,
+        title:"Fetch Continent: Europe",
+        click:"contactList.fetchData({continent:'Europe'})"
+    })
+
+
+    isc.IButton.create({
+        left:340, top:240, width:160,
+        title:"Fetch All",
+        click:"contactList.fetchData()"
+    })
+
+
+</script>
+</body>
+</html>

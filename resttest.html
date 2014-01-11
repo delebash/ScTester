@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <SCRIPT>var isomorphicDir = "js/lib/isomorphic/";</SCRIPT>
+    <SCRIPT SRC=js/lib/isomorphic/system/modules-debug/ISC_Core.js></SCRIPT>
+    <SCRIPT SRC=js/lib/isomorphic/system/modules-debug/ISC_Foundation.js></SCRIPT>
+    <SCRIPT SRC=js/lib/isomorphic/system/modules-debug/ISC_Containers.js></SCRIPT>
+    <SCRIPT SRC=js/lib/isomorphic/system/modules-debug/ISC_Grids.js></SCRIPT>
+    <SCRIPT SRC=js/lib/isomorphic/system/modules-debug/ISC_Forms.js></SCRIPT>
+    <SCRIPT SRC=js/lib/isomorphic/system/modules-debug/ISC_DataBinding.js></SCRIPT>
+    <SCRIPT SRC=js/lib/isomorphic/skins/EnterpriseBlue/load_skin.js></SCRIPT>
+    <SCRIPT SRC=js/scExtensions/oDataTypes.js></SCRIPT>
+    <SCRIPT SRC=js/scExtensions/oRestDataSource.js></SCRIPT>
+
+
+</head>
+<body>
+<script>
+   // Time.setDefaultDisplayTimezone("+00:00")
+   //Date.setShortDisplayFormat("toUSShortDatetime");
+  // Date.setShortDatetimeDisplayFormat("toUSShortDatetime")
+//Date.setNormalDateDisplayFormat("toUSShortDatetime")
+    RPCManager.allowCrossDomainCalls = true
+
+   // Date.setShortDatetimeDisplayFormat("toSerializeableDate");
+    isc.oRestDataSource.create({
+        //DS ID must be same name as OrientDb Class
+        ID: "Contact",
+
+        fields: [
+            {name: "@rid", type: "text", title: "rid", primaryKey: true, canEdit: false},
+            {name: "@version", type: "integer", title: "version", canEdit: false},
+            {name: "lastName", type: "text", title: "lastName"},
+            {name: "firstName", type: "text", title: "firstName"}
+        ]
+    });
+//   {name: "firstName", type: "text", title: "First Name"},
+//   {name: "lastName", type: "text", title: "Last Name"},
+//   {name: "bool", type: "boolean", title: "boolean"},
+//   {name: "integer", type: "OInteger", title: "integer"},
+//   {name: "float", type: "float", title: "float"},
+//   {name: "date", type: "date", title: "date"},
+//   {name: "datetime", type: "datetime", title: "datetime"},
+//   {name: "double", type: "float", title: "double"},
+//   {name: "long", type: "integer", title: "long"},
+//   {name: "short", type: "Oshort", title: "short"},
+//   {name: "decimal", type: "float", title: "decimal"},
+//   {name: "time", type: "time", title: "time"}
+
+    isc.FilterBuilder.create({
+        "ID": "advancedFilter",
+        "dataSource": "Contact",
+        "topOperator": "and"
+    });
+
+    isc.ToolStrip.create({
+        ID: "gridEditControls",
+        width: "100%", height: 24,
+        members: [
+            isc.Label.create({
+                padding: 5,
+                ID: "totalsLabel"
+            }),
+            isc.LayoutSpacer.create({ width: "*" }),
+            isc.ToolStripButton.create({
+                icon: "[SKIN]/actions/edit.png",
+                prompt: "Edit selected record",
+                click: function () {
+                    var record = contactsList.getSelectedRecord();
+                    if (record == null) return;
+                    contactsList.startEditing(contactsList.data.indexOf(record));
+                }
+            }),
+            isc.ToolStripButton.create({
+                icon: "[SKIN]/actions/remove.png",
+                prompt: "Remove selected record",
+                click: "contactsList.removeSelectedData()"
+            })
+        ]
+    });
+
+    isc.ListGrid.create({
+        ID: "contactsList",
+        width: 1000, height: 224, alternateRecordStyles: true,
+        filterOnKeypress: false,
+        fetchDelay: 500,
+        allowFilterExpressions: true,
+        showFilterEditor: true,
+        autoFetchData: true,
+        showAllRecords: false,
+        dataSource: "Contact",
+        drawAllMaxCells: 0,
+        dataPageSize: 50,
+        drawAheadRatio: 4,
+        canEdit: true,
+        editEvent: "click",
+        listEndEditAction: "next",
+        autoSaveEdits: false,
+        canRemoveRecords: true,
+
+        recordClick: "contactsForm.editSelectedData(contactsList)",
+        gridComponents: ["header","filterEditor", "body", gridEditControls],
+        dataChanged: function () {
+            this.Super("dataChanged", arguments);
+            var totalRows = this.data.getLength();
+            if (totalRows > 0 && this.data.lengthIsKnown()) {
+                totalsLabel.setContents(totalRows + " Records");
+            } else {
+                totalsLabel.setContents("&nbsp;");
+            }
+        }
+
+    });
+
+    isc.IButton.create({
+        top: 340, left: 510,
+        "ID": "filterButton",
+        "title": "Filter",
+        "click": function () {
+            contactsList.filterData(advancedFilter.getCriteria());
+        }
+    });
+    isc.HStack.create({
+        "membersMargin": 10,
+        "ID": "gridButtons",
+        "members": [
+            isc.IButton.create({
+                "top": 250,
+                "title": "Edit New",
+                "click": "contactsList.startEditingNew()"
+            }),
+            isc.IButton.create({
+                "top": 250,
+                "left": 100,
+                "title": "Save all",
+                "click": "contactsList.saveAllEdits()"
+            })
+        ]
+    });
+    isc.HStack.create({
+        "membersMargin": 10,
+        "ID": "gridButtons2",
+        "members": [
+            isc.DynamicForm.create({ ID: "contactsForm", left: 50, top: 370, width: 300, dataSource: "Contact" }),
+            isc.IButton.create({
+                top: 500, left: 110,
+                title: "Save",
+                click: "contactsForm.saveData()"
+            }),
+            isc.IButton.create({
+                top: 500, left: 230,
+                title: "Add New",
+                click: "contactsForm.editNewRecord()"
+            })
+        ]
+    });
+    isc.VStack.create({
+        "membersMargin": 10,
+        "members": [advancedFilter,filterButton, contactsList, gridButtons, gridButtons2]
+    });
+
+
+</script>
+</body>
+</html>
